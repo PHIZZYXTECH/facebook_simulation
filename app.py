@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, make_response
+kfrom flask import Flask, request, render_template, make_response
 from datetime import datetime
 import requests
 import json
@@ -103,4 +103,4 @@ def map_view():
 
 @app.route('/session_expired')
 def expired():
-    return "<h3 style='text-align:center;'>Session expired. Please try again later.</h3>"
+    return render_template("session_expired.html")
