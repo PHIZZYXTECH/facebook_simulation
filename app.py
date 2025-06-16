@@ -1,11 +1,10 @@
-kfrom flask import Flask, request, render_template, make_response
+from flask import Flask, request, render_template, make_response
 from datetime import datetime
 import requests
 import json
 
 app = Flask(__name__)
 
-# Updated IP location function using ipapi.co
 def get_location(ip):
     try:
         response = requests.get(f"https://ipapi.co/{ip}/json/")
