@@ -1,21 +1,22 @@
-from flask import Flask, request, render_template, make_response
+kfrom flask import Flask, request, render_template, make_response
 from datetime import datetime
 import requests
 import json
 
 app = Flask(__name__)
 
+# Updated IP location function using ipapi.co
 def get_location(ip):
     try:
-        response = requests.get(f"https://ipinfo.io/{ip}/json")
+        response = requests.get(f"https://ipapi.co/{ip}/json/")
         if response.status_code == 200:
             data = response.json()
             return {
                 "city": data.get("city", "Unknown"),
                 "region": data.get("region", "Unknown"),
-                "country": data.get("country", "Unknown"),
+                "country": data.get("country_name", "Unknown"),
                 "org": data.get("org", "Unknown"),
-                "loc": data.get("loc", "0,0")
+                "loc": f"{data.get('latitude', '0')},{data.get('longitude', '0')}"
             }
     except:
         pass
